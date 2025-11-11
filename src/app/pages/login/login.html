@@ -1,0 +1,127 @@
+<div class="login-container">
+  <div class="login-wrapper">
+    <!-- Decorative Background Elements -->
+    <div class="bg-decoration bg-top"></div>
+    <div class="bg-decoration bg-bottom"></div>
+
+    <!-- Logo / Header -->
+    <div class="login-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i class="bi bi-music-note-list"></i>
+        </div>
+      </div>
+      <h1 class="brand-title">Noisy</h1>
+      <p class="brand-subtitle">Comparte tu música, conecta con artistas</p>
+    </div>
+
+    <!-- Card de Login -->
+    <div class="card login-card">
+      <div class="card-decoration"></div>
+      <div class="card-body">
+        <h4 class="card-title">
+          <i class="bi bi-box-arrow-in-right"></i>
+          Ingresar a tu cuenta
+        </h4>
+
+        <!-- Mensajes de error/éxito -->
+        <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle"></i> {{ errorMessage }}
+        </div>
+        <div *ngIf="successMessage" class="alert alert-success" role="alert">
+          <i class="bi bi-check-circle"></i> {{ successMessage }}
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Username or Email -->
+          <div class="form-group">
+            <label for="identifier" class="form-label">
+              <i class="bi bi-person-circle"></i>
+              Usuario o correo
+            </label>
+            <div class="input-wrapper">
+              <i class="input-icon bi bi-envelope"></i>
+              <input 
+                id="identifier" 
+                type="text" 
+                class="form-control" 
+                [class.is-invalid]="loginForm.get('identifier')?.touched && loginForm.get('identifier')?.invalid"
+                formControlName="identifier" 
+                placeholder="Tu usuario o correo electrónico" 
+              />
+            </div>
+            <div *ngIf="loginForm.get('identifier')?.touched && loginForm.get('identifier')?.invalid" class="invalid-feedback">
+              <small *ngIf="loginForm.get('identifier')?.errors?.['required']">
+                <i class="bi bi-exclamation-circle"></i> El usuario o correo es obligatorio.
+              </small>
+              <small *ngIf="loginForm.get('identifier')?.errors?.['minlength']">
+                <i class="bi bi-exclamation-circle"></i> Mínimo 3 caracteres.
+              </small>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <i class="bi bi-lock-circle"></i>
+              Contraseña
+            </label>
+            <div class="input-wrapper">
+              <i class="input-icon bi bi-key"></i>
+              <input 
+                id="password" 
+                [type]="passwordVisible ? 'text' : 'password'" 
+                class="form-control" 
+                [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                formControlName="password" 
+                placeholder="Tu contraseña"
+              />
+              <button 
+                type="button" 
+                class="btn-toggle-password" 
+                (click)="togglePasswordVisibility()"
+              >
+                <i class="bi" [ngClass]="{'bi-eye': !passwordVisible, 'bi-eye-slash': passwordVisible}"></i>
+              </button>
+            </div>
+            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="invalid-feedback">
+              <small *ngIf="loginForm.get('password')?.errors?.['required']">
+                <i class="bi bi-exclamation-circle"></i> La contraseña es obligatoria.
+              </small>
+              <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                <i class="bi bi-exclamation-circle"></i> La contraseña debe tener al menos 8 caracteres.
+              </small>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            class="btn-submit" 
+            type="submit" 
+            [disabled]="loginForm.invalid"
+          >
+            <i class="bi bi-arrow-right"></i>
+            Entrar
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+          <span>¿No tienes cuenta?</span>
+        </div>
+
+        <!-- Register Link -->
+        <a routerLink="/register" class="btn-secondary">
+          <i class="bi bi-person-plus"></i>
+          Crear una cuenta
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="login-footer">
+      <p>© 2025 Noisy. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,264 @@
+<div class="register-container">
+  <div class="register-wrapper">
+ 
+    <div class="bg-decoration bg-top"></div>
+    <div class="bg-decoration bg-bottom"></div>
+
+    
+    <div class="register-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i class="bi bi-music-note-list"></i>
+        </div>
+      </div>
+      <h1 class="brand-title">Noisy</h1>
+      <p class="brand-subtitle">Únete a nuestra comunidad musical</p>
+    </div>
+
+    <div class="card register-card">
+      <div class="card-decoration"></div>
+      <div class="card-body">
+        <h4 class="card-title">
+          <i class="bi bi-person-check"></i>
+          Crear tu cuenta
+        </h4>
+
+        
+        <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle"></i> {{ errorMessage }}
+        </div>
+        <div *ngIf="successMessage" class="alert alert-success" role="alert">
+          <i class="bi bi-check-circle"></i> {{ successMessage }}
+        </div>
+
+        
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" novalidate>
+         
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre" class="form-label">
+                <i class="bi bi-person"></i>
+                Nombre
+              </label>
+              <input 
+                id="nombre" 
+                type="text" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid"
+                formControlName="nombre" 
+                placeholder="Tu nombre" 
+              />
+              <div *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid" class="invalid-feedback">
+                <small><i class="bi bi-exclamation-circle"></i> El nombre es obligatorio.</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="apellido" class="form-label">
+                <i class="bi bi-person"></i>
+                Apellido
+              </label>
+              <input 
+                id="apellido" 
+                type="text" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('apellido')?.touched && registerForm.get('apellido')?.invalid"
+                formControlName="apellido" 
+                placeholder="Tu apellido" 
+              />
+              <div *ngIf="registerForm.get('apellido')?.touched && registerForm.get('apellido')?.invalid" class="invalid-feedback">
+                <small><i class="bi bi-exclamation-circle"></i> El apellido es obligatorio.</small>
+              </div>
+            </div>
+          </div>
+
+         
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <i class="bi bi-envelope"></i>
+                Correo electrónico
+              </label>
+              <input 
+                id="email" 
+                type="email" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+                formControlName="email" 
+                placeholder="tu@correo.com" 
+              />
+              <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="invalid-feedback">
+                <small *ngIf="registerForm.get('email')?.errors?.['required']">
+                  <i class="bi bi-exclamation-circle"></i> El correo es obligatorio.
+                </small>
+                <small *ngIf="registerForm.get('email')?.errors?.['email']">
+                  <i class="bi bi-exclamation-circle"></i> Formato de correo inválido.
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="username" class="form-label">
+                <i class="bi bi-at"></i>
+                Nombre de usuario
+              </label>
+              <input 
+                id="username" 
+                type="text" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('username')?.touched && registerForm.get('username')?.invalid"
+                formControlName="username" 
+                placeholder="nombredeusuario" 
+              />
+              <div *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid" class="invalid-feedback">
+                <small *ngIf="registerForm.get('username')?.errors?.['required']">
+                  <i class="bi bi-exclamation-circle"></i> El nombre de usuario es obligatorio.
+                </small>
+                <small *ngIf="registerForm.get('username')?.errors?.['minlength']">
+                  <i class="bi bi-exclamation-circle"></i> Mínimo 3 caracteres.
+                </small>
+              </div>
+            </div>
+          </div>
+
+    
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password" class="form-label">
+                <i class="bi bi-lock"></i>
+                Contraseña
+              </label>
+              <input 
+                id="password" 
+                type="password" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+                formControlName="password" 
+                placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número" 
+              />
+              <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="invalid-feedback">
+                <small *ngIf="registerForm.get('password')?.errors?.['required']">
+                  <i class="bi bi-exclamation-circle"></i> La contraseña es obligatoria.
+                </small>
+                <small *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                  <i class="bi bi-exclamation-circle"></i> Mínimo 8 caracteres.
+                </small>
+                <small *ngIf="registerForm.get('password')?.errors?.['pattern']">
+                  <i class="bi bi-exclamation-circle"></i> Debe contener 1 mayúscula y 1 número.
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword" class="form-label">
+                <i class="bi bi-lock-check"></i>
+                Repetir contraseña
+              </label>
+              <input 
+                id="confirmPassword" 
+                type="password" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('confirmPassword')?.touched && (registerForm.get('confirmPassword')?.invalid || registerForm.errors?.['passwordMismatch'])"
+                formControlName="confirmPassword" 
+                placeholder="Repetir contraseña" 
+              />
+              <div *ngIf="registerForm.get('confirmPassword')?.touched && (registerForm.get('confirmPassword')?.invalid || registerForm.errors?.['passwordMismatch'])" class="invalid-feedback">
+                <small *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
+                  <i class="bi bi-exclamation-circle"></i> Debe repetir la contraseña.
+                </small>
+                <small *ngIf="registerForm.errors?.['passwordMismatch']">
+                  <i class="bi bi-exclamation-circle"></i> Las contraseñas no coinciden.
+                </small>
+              </div>
+            </div>
+          </div>
+
+    
+          <div class="form-row">
+            <div class="form-group">
+              <label for="birthdate" class="form-label">
+                <i class="bi bi-calendar"></i>
+                Fecha de nacimiento
+              </label>
+              <input 
+                id="birthdate" 
+                type="date" 
+                class="form-control" 
+                [class.is-invalid]="registerForm.get('birthdate')?.touched && registerForm.get('birthdate')?.invalid"
+                formControlName="birthdate" 
+              />
+              <div *ngIf="registerForm.get('birthdate')?.touched && registerForm.get('birthdate')?.invalid" class="invalid-feedback">
+                <small *ngIf="registerForm.get('birthdate')?.errors?.['required']">
+                  <i class="bi bi-exclamation-circle"></i> La fecha de nacimiento es obligatoria.
+                </small>
+                <small *ngIf="registerForm.get('birthdate')?.errors?.['underage']">
+                  <i class="bi bi-exclamation-circle"></i> Debes tener al menos 13 años.
+                </small>
+                <small *ngIf="registerForm.get('birthdate')?.errors?.['futureDate']">
+                  <i class="bi bi-exclamation-circle"></i> La fecha no puede ser futura.
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description" class="form-label">
+                <i class="bi bi-chat-left-text"></i>
+                Descripción breve
+              </label>
+              <textarea 
+                id="description" 
+                class="form-control" 
+                formControlName="description" 
+                rows="2" 
+                placeholder="Contanos algo sobre vos (opcional)..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileImage" class="form-label">
+                <i class="bi bi-image"></i>
+                Foto de perfil
+              </label>
+              <input 
+                id="profileImage" 
+                type="file" 
+                class="form-control file-input" 
+                (change)="onFileSelected($event)" 
+                accept="image/*"
+              />
+              <div class="form-text">JPG, PNG. Máx. 5MB (opcional).</div>
+            </div>
+          </div>
+
+     
+          <button 
+            class="btn-submit" 
+            type="submit" 
+            [disabled]="registerForm.invalid"
+          >
+            <i class="bi bi-person-plus"></i>
+            Registrarme
+          </button>
+        </form>
+
+       
+        <div class="divider">
+          <span>¿Ya tienes cuenta?</span>
+        </div>
+       
+        <a routerLink="/login" class="btn-secondary">
+          <i class="bi bi-arrow-left"></i>
+          Ingresar
+        </a>
+      </div>
+    </div>
+
+
+    <!-- Footer Info -->
+    <div class="register-footer">
+      <p>© 2025 Noisy. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</div>

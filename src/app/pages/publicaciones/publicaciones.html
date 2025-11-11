@@ -1,0 +1,52 @@
+<div class="posts-container">
+
+  <nav class="posts-navbar">
+    <div class="navbar-content">
+      
+      <div class="navbar-brand">
+        <span class="brand-emoji">🎵</span>
+        <span class="brand-text">Noisy</span>
+      </div>
+
+      <div class="navbar-user">
+        <div class="user-profile" (click)="toggleUserMenu()">
+          <img 
+            [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + currentUser?.nombre + '+' + currentUser?.apellido + '&background=6366f1&color=fff'" 
+            [alt]="currentUser?.nombre"
+            class="profile-image"
+          />
+          <span class="username">{{ currentUser?.username }}</span>
+          <i class="bi bi-chevron-down"></i>
+        </div>
+
+     
+        <div class="user-menu" *ngIf="showUserMenu">
+          <a routerLink="/mi-perfil" class="menu-item">
+            <i class="bi bi-person"></i>
+            Mi Perfil
+          </a>
+          <button (click)="logout()" class="menu-item logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="posts-main">
+    
+    <div class="posts-wrapper">
+    
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="bi bi-music-note-beamed"></i>
+        </div>
+        <h2 class="empty-title">Sin publicaciones</h2>
+        <p class="empty-text">Se mostrarán posts cuando crees uno</p>
+        <p class="empty-subtitle">¡Comienza a compartir tu música con la comunidad!</p>
+      </div>
+    </div>
+  </div>
+</div>
