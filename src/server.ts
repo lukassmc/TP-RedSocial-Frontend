@@ -13,6 +13,51 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
+ * Simple proxy for API requests when running the SSR server.
+ * It forwards any request starting with /api to the backend defined by
+ * the API_URL environment variable (for example https://api-tuapp.onrender.com).
+ * If API_URL is not set, it falls back to http://localhost:3000.
+ */
+app.use('/api', async (req, res) => {
+  try {
+    const backendBase = process.env['API_URL'] || 'http://localhost:3000';
+    const target = backendBase.replace(/\/$/, '') + req.originalUrl; // keep path
+
+    const fetchOptions: any = {
+      method: req.method,
+      headers: { ...req.headers },
+      redirect: 'manual'
+    };
+
+    // Remove host header to avoid conflicts
+    delete fetchOptions.headers.host;
+
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      fetchOptions.body = req;
+    }
+
+    const upstream = await fetch(target, fetchOptions);
+
+    // copy status
+    res.status(upstream.status);
+
+    // copy headers
+    upstream.headers.forEach((value, name) => {
+      // skip hop-by-hop headers
+      if (["connection", "keep-alive", "transfer-encoding", "upgrade"].includes(name.toLowerCase())) return;
+      res.setHeader(name, value);
+    });
+
+    // pipe body
+    const body = await upstream.arrayBuffer();
+    res.send(Buffer.from(body));
+  } catch (err) {
+    console.error('API proxy error:', err);
+    res.status(502).send('Bad Gateway');
+  }
+});
+
+/**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
  *

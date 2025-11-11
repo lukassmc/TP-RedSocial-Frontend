@@ -39,7 +39,11 @@ export interface AuthResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
-  private apiUrl = 'http://localhost:3000/api/auth';
+  // Use a relative API path. When running the SSR server (Render), the server
+  // will proxy `/api` to the real backend URL defined in the `API_URL` env var.
+  // When running locally without the proxy, you can set API_URL in the server
+  // or run the backend on localhost:3000.
+  private apiUrl = '/api/auth';
 
   register(registerData: RegisterData | FormData): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, registerData);
