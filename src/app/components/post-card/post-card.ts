@@ -1,13 +1,17 @@
 // src/app/components/post-card/post-card.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Post } from '../../../models/post.model';
+import { PostsService } from '../../services/posts.services';
+import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-post-card',
+  imports : [CommonModule],
   templateUrl: './post-card.html',
   styleUrls: ['./post-card.css']
 })
-export class PostCardComponent {
+export class PostCardComponent implements OnInit {
   @Input() post!: Post;
   @Input() showDeleteButton: boolean = false;
   
@@ -15,17 +19,21 @@ export class PostCardComponent {
   @Output() unlike = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
 
-  // Verificar si el usuario actual dio like
-  get hasLiked(): boolean {
+  hasLiked: boolean = false;
+  isOwner: boolean = false;
 
-    
-    return false; 
+  constructor(
+    private postsService: PostsService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this.checkUserInteractions();
   }
 
-  // Verificar si es el dueño del post
-  get isOwner(): boolean {
-      
-    return false;
+  private checkUserInteractions(): void {
+    this.hasLiked = this.postsService.hasLiked(this.post);
+    this.isOwner = this.postsService.isPostOwner(this.post);
   }
 
   onLike(): void {
@@ -34,6 +42,8 @@ export class PostCardComponent {
     } else {
       this.like.emit(this.post._id);
     }
+    // Actualizar estado local inmediatamente para mejor UX
+    this.hasLiked = !this.hasLiked;
   }
 
   onDelete(): void {

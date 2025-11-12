@@ -17,7 +17,7 @@
       (click)="onDelete()"
       class="ml-auto text-red-500 hover:text-red-700"
     >
-      🗑️
+      
     </button>
   </div>
 
@@ -35,8 +35,8 @@
 
   <!-- Música (futura implementación) -->
   <div *ngIf="post.music" class="bg-gray-100 rounded-lg p-3 mb-4">
-    <p class="font-semibold">🎵 {{ post.music?.trackName }}</p>
-    <p class="text-sm text-gray-600">{{ post.music?.artistName }} - {{ post.music?.albumName }}</p>
+    <p class="font-semibold">🎵 {{ post.music.trackName }}</p>
+    <p class="text-sm text-gray-600">{{ post.music.artistName }} - {{ post.music.albumName }}</p>
     <!-- Aquí irá el reproductor de música -->
   </div>
 

@@ -53,7 +53,8 @@ export class Login {
         this.successMessage = 'Login exitoso. Redirigiendo...';
         
         // Guardar datos del usuario en localStorage
-        this.authService.saveUser(response.data);
+        this.authService.saveUser(response.user)
+        localStorage.setItem('access_token', response.access_token);
         
         // Redireccionar a la página de publicaciones
         setTimeout(() => {

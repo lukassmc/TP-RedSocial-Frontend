@@ -1,51 +1,85 @@
-<div class="posts-container">
-
-  <nav class="posts-navbar">
-    <div class="navbar-content">
+<div class="posts-page">
+  <div class="posts-container">
+     <app-create-post (postCreated)="onPostCreated()"></app-create-post>
+    <!-- Header -->
+    <div class="posts-header">
+      <h1 class="posts-title">Publicaciones</h1>
       
-      <div class="navbar-brand">
-        <span class="brand-emoji">🎵</span>
-        <span class="brand-text">Noisy</span>
-      </div>
-
-      <div class="navbar-user">
-        <div class="user-profile" (click)="toggleUserMenu()">
-          <img 
-            [src]="currentUser?.profilePicture || 'https://ui-avatars.com/api/?name=' + currentUser?.nombre + '+' + currentUser?.apellido + '&background=6366f1&color=fff'" 
-            [alt]="currentUser?.nombre"
-            class="profile-image"
-          />
-          <span class="username">{{ currentUser?.username }}</span>
-          <i class="bi bi-chevron-down"></i>
-        </div>
-
-     
-        <div class="user-menu" *ngIf="showUserMenu">
-          <a routerLink="/mi-perfil" class="menu-item">
-            <i class="bi bi-person"></i>
-            Mi Perfil
-          </a>
-          <button (click)="logout()" class="menu-item logout-btn">
-            <i class="bi bi-box-arrow-right"></i>
-            Cerrar Sesión
-          </button>
-        </div>
+      <!-- Selector de ordenamiento -->
+      <div class="sort-container">
+        <label class="sort-label">Ordenar por:</label>
+        <select 
+          [(ngModel)]="sortBy" 
+          (change)="changeSort(sortBy)"
+          class="sort-select"
+        >
+          <option value="date">Más recientes</option>
+          <option value="likes">Más populares</option>
+        </select>
       </div>
     </div>
-  </nav>
 
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="loading-spinner"></div>
+    </div>
 
-  <div class="posts-main">
-    
-    <div class="posts-wrapper">
-    
-      <div class="empty-state">
-        <div class="empty-icon">
-          <i class="bi bi-music-note-beamed"></i>
-        </div>
-        <h2 class="empty-title">Sin publicaciones</h2>
-        <p class="empty-text">Se mostrarán posts cuando crees uno</p>
-        <p class="empty-subtitle">¡Comienza a compartir tu música con la comunidad!</p>
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error-state">
+      <div class="error-message">{{ error }}</div>
+      <button (click)="loadPosts()" class="retry-button">Reintentar</button>
+    </div>
+
+    <!-- Posts List -->
+    <div *ngIf="!loading && !error">
+      <!-- Lista de posts -->
+      <div class="posts-list">
+        <app-post-card
+          *ngFor="let post of posts"
+          [post]="post"
+          [showDeleteButton]="true"
+          (like)="onLike($event)"
+          (unlike)="onUnlike($event)"
+          (delete)="onDelete($event)"
+        ></app-post-card>
+      </div>
+
+      <!-- Paginación -->
+      <div *ngIf="totalPages > 1" class="pagination">
+        <!-- Botón Anterior -->
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="pagination-button"
+        >
+          ← Anterior
+        </button>
+
+        <!-- Números de página -->
+        <button
+          *ngFor="let page of pagesArray"
+          (click)="changePage(page)"
+          [class.active]="page === currentPage"
+          class="pagination-number"
+        >
+          {{ page }}
+        </button>
+
+        <!-- Botón Siguiente -->
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="pagination-button"
+        >
+          Siguiente →
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="posts.length === 0" class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3 class="empty-title">No hay publicaciones</h3>
+        <p class="empty-text">Sé el primero en crear una publicación.</p>
       </div>
     </div>
   </div>

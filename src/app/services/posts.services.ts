@@ -30,8 +30,8 @@ export class PostsService {
         });
     }
 
-    createPost(postData: CreatePost) : Observable<Post>{
-        return this.http.post<Post>(this.apiUrl, postData)
+    createPost(postData: any) : Observable<Post>{
+        return this.http.post<any>(this.apiUrl, postData)
 
     }
 
@@ -50,14 +50,18 @@ export class PostsService {
         return this.http.delete<Post>(`${this.apiUrl}/${postId}/like`);
     }
     
-    hasLiked(post: Post): boolean{  
-        const currentUser = this.authService.getCurrentUser();
-        return currentUser ? post.likes.includes(currentUser._id): false;
+    hasLiked(post: Post): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return false;
+    
+    return Array.isArray(post.likes) && post.likes.includes(currentUser._id);
     }
     
-    isPostOwner(post:Post) : boolean {
-        const currentUser = this.authService.getCurrentUser();
-        return currentUser ? post.userId._id === currentUser._id : false;
+    isPostOwner(post: Post): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return false;
+    
+    return post.userId._id === currentUser._id;
     }
     
 }

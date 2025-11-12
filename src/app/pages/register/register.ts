@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthResponse, AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -126,10 +126,11 @@ export class Register {
         formData.append('profileImage', this.selectedFile);
 
         this.authService.register(formData).subscribe({
-          next: (response) => {
+          next: (response: AuthResponse) => {
             console.log('Registro exitoso:', response);
             this.successMessage = response.message || 'Registro exitoso. Redirigiendo...';
-            this.authService.saveUser(response.data);
+            this.authService.saveUser(response.user)
+            localStorage.setItem('access_token', response.access_token);
             setTimeout(() => {
               this.router.navigate(['/login']);
             }, 2000);
@@ -157,10 +158,11 @@ export class Register {
         };
 
         this.authService.register(registerData).subscribe({
-          next: (response) => {
+          next: (response: AuthResponse) => {
             console.log('Registro exitoso:', response);
             this.successMessage = response.message || 'Registro exitoso. Redirigiendo...';
-            this.authService.saveUser(response.data);
+            this.authService.saveUser(response.user)
+            localStorage.setItem('access_token', response.access_token);
             setTimeout(() => {
               this.router.navigate(['/login']);
             }, 2000);
