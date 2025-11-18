@@ -1,0 +1,100 @@
+.comment-section {
+  margin-top: 1.2rem;
+  padding: 1.2rem;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 1px solid #ececec;
+}
+
+.comment-section h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.comment-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #efefef;
+}
+
+.comment-card:last-child {
+  border-bottom: none;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #dddddd;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-content .username {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+
+.comment-content p {
+  margin: 3px 0 0;
+  font-size: 14px;
+  line-height: 1.35;
+  color: #333;
+}
+
+/* --- Formulario --- */
+
+form {
+  display: flex;
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+form input {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #d4d4d4;
+  background: #fafafa;
+  transition: border 0.15s;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #1976d2;
+  background: #fff;
+}
+
+form button {
+  padding: 0 18px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+form button:hover {
+  background: #1258a9;
+}
+
+form button:active {
+  transform: scale(0.97);
+}
+
+form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

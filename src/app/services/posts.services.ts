@@ -27,15 +27,14 @@ export class PostsService {
 
     }
 
-    getMyPosts(limit: number =3) : Observable<{ posts: Post[] }>{
-
+    getMyPosts(limit: number = 3): Observable<Post[]> {
+        const token = localStorage.getItem('token')
+        
         return this.http.get<Post[]>(`${this.apiUrl}/my-posts`, {
+            
             params: new HttpParams().set('limit', limit.toString())
-        }).pipe(
-            map(posts => ({ posts }))
-        );
-    }
-
+        });
+        }
     createPost(postData: any): Observable<Post> {
 
         if (postData instanceof FormData) {

@@ -1,6 +1,6 @@
 // src/app/components/navbar/navbar.component.ts
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 
@@ -16,7 +16,7 @@ interface CurrentUser {
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
@@ -72,7 +72,7 @@ export class NavbarComponent implements OnInit {
 
   // Navegar al perfil
   goToProfile(): void {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/mi-perfil']);
     this.showUserMenu = false;
   }
 

@@ -5,7 +5,6 @@
         <img [src]="avatarPreview || defaultAvatarUrl" alt="avatar" class="large-avatar" />
         <div class="avatar-actions">
           <button class="btn small" (click)="openEditModal()">Editar perfil</button>
-          <button class="btn ghost" (click)="logout()">Cerrar sesión</button>
         </div>
       </div>
 
@@ -14,11 +13,11 @@
         <div class="meta">
           <span class="username">@{{ currentUser?.username }}</span>
           <span class="dot">•</span>
-          <span class="birth" *ngIf="currentUser?.fechaNacimiento">
-            {{ currentUser?.fechaNacimiento | date:'mediumDate' }}
+          <span class="birth" *ngIf="currentUser?.birthdate">
+            {{ currentUser?.birthdate | date:'mediumDate' }}
           </span>
         </div>
-        <p class="description">{{ currentUser?.descripcion || '— Sin descripción —' }}</p>
+        <p class="description">{{ currentUser?.description || '— Sin descripción —' }}</p>
       </div>
     </div>
 
@@ -71,8 +70,8 @@
           </div>
 
           <div class="row">
-            <input type="date" formControlName="fechaNacimiento" />
-            <input formControlName="descripcion" placeholder="Descripción (breve)" />
+            <input type="date" formControlName="birthdate" />
+            <input formControlName="description" placeholder="Descripción (breve)" />
           </div>
 
           <div class="modal-actions">

@@ -1,0 +1,18 @@
+<div class="comment-section">
+  <div *ngIf="loading">Cargando comentarios...</div>
+  <div *ngIf="!loading && comments.length === 0">No hay comentarios</div>
+
+  <div *ngFor="let comment of comments" class="comment-card">
+    <img [src]="comment.userId.profilePicture || '/assets/default-avatar.jpg'" class="avatar">
+    <div class="comment-content">
+      <strong>{{ comment.userId.nombre }} ({{ comment.userId.username }})</strong>
+      <p>{{ comment.content }}</p>
+      <small>{{ comment.createdAt | date:'short' }}</small>
+    </div>
+  </div>
+
+  <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+    <input type="text" formControlName="content" placeholder="Escribí un comentario... Máximo 500 carácteres." />
+    <button type="submit" [disabled]="commentForm.invalid">Enviar</button>
+  </form>
+</div>

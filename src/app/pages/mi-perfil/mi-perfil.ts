@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { PostsService } from '../../services/posts.services';
 
 import { PostCardComponent } from '../../components/post-card/post-card';
 import { Post } from '../../../models/post.model';
+import { UsersService } from '../../services/user.service';
 @Component({
   selector: 'app-mi-perfil',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, PostCardComponent, DatePipe],
@@ -20,20 +21,14 @@ export class MiPerfil implements OnInit, OnDestroy {
   private fb: FormBuilder,
   private authService: AuthService,
   private postsService: PostsService,
+  private userService : UsersService,
   private router : Router
   ) {}
 
   currentUser : any = null;
   subscription: Subscription | null = null;
 
-    profileForm = this.fb.group({
-    nombre: ['', [Validators.required, Validators.maxLength(30)]],
-    apellido: ['', [Validators.required, Validators.maxLength(30)]],
-    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-    email: ['', [Validators.required, Validators.email]],
-    descripcion: ['', [Validators.maxLength(200)]],
-    fechaNacimiento: ['']
-  });
+  profileForm! : FormGroup;
 
   defaultAvatarUrl= '/assets/default-avatar.jpg'
   avatarPreview : string | null = null;
@@ -53,6 +48,16 @@ export class MiPerfil implements OnInit, OnDestroy {
 
 
   ngOnInit(): void{
+
+      this.profileForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.maxLength(30)]],
+      apellido: ['', [Validators.required, Validators.maxLength(30)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      email: ['', [Validators.required, Validators.email]],
+      description: ['', [Validators.maxLength(200)]],
+      birthdate: ['']
+    });
+
 
     this.subscription = this.authService.usuarioLogueado$.subscribe(user => {
       this.currentUser =user;
@@ -81,8 +86,8 @@ export class MiPerfil implements OnInit, OnDestroy {
       apellido: user.apellido || '',
       username: user.username || '',
       email: user.email || '',
-      descripcion: user.descripcion || '',
-      fechaNacimiento: user.fechaNacimiento ? this.formatDateForInput(user.fechaNacimiento) : ''
+      description: user.description || '',
+      birthdate: user.birthdate ? this.formatDateForInput(user.birthdate) : ''
 
     })
 
@@ -104,8 +109,10 @@ export class MiPerfil implements OnInit, OnDestroy {
     this.postsService.getMyPosts()
     .pipe(take(1))
     .subscribe({
-      next: res =>{
-        this.lastPosts = res.posts;
+      next: posts =>{
+          console.log("🟦 Posts recibidos:", posts);
+          console.log("🟨 Tipo:", Array.isArray(posts), "Cantidad:", posts?.length);
+        this.lastPosts = posts;
         this.postsLoading = false;
       },
       error: err =>{
@@ -169,18 +176,19 @@ export class MiPerfil implements OnInit, OnDestroy {
     formData.append('apellido', this.profileForm.value.apellido ?? '');
     formData.append('username', this.profileForm.value.username ?? '');
     formData.append('email', this.profileForm.value.email ?? '');
-    formData.append('descripcion', this.profileForm.value.descripcion ?? '');
-    formData.append('fechaNacimiento', this.profileForm.value.fechaNacimiento ?? '');
+    formData.append('description', this.profileForm.value.description ?? '');
+    formData.append('birthdate', this.profileForm.value.birthdate ?? '');
     if (this.avatarFile) {
       formData.append('avatar', this.avatarFile, this.avatarFile.name);
     }
 
     
-    this.usersService.updateProfile(this.currentUser._id, formData)
+    this.userService.updateProfile(this.currentUser._id, formData)
       .pipe(take(1))
       .subscribe({
         next: (updatedUser: any) => {
          
+          localStorage.setItem('currentUser', JSON.stringify(updatedUser));
           this.authService.setUsuarioLogueado(updatedUser);
           this.successMsg = 'Perfil actualizado correctamente';
           this.saving = false;

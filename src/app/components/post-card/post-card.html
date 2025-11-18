@@ -66,10 +66,20 @@
       </button>
 
       <!-- Comentarios -->
-      <button class="action-btn" title="Comentarios">
+      <button 
+          class="action-btn" 
+          title="Comentarios"
+          (click)="toggleComments()"
+        >
         <i>💬</i>
-        <span class="comment-count">{{ post.comments || 0 }}</span>
+        
       </button>
     </div>
+  </div>
+    <div *ngIf="showComments" class="comments-wrapper">
+    <app-comment-section 
+      [postId]="post._id"
+      (commentAdded)="onCommentAdded()"> 
+    </app-comment-section>
   </div>
 </div>

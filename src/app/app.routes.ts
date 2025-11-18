@@ -1,11 +1,7 @@
-import { Routes, RouterModule} from '@angular/router';
-import { Login } from './pages/login/login';
-import { Register } from './pages/register/register';
-import { Publicaciones } from './pages/publicaciones/publicaciones';
+import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { Profiles } from './pages/profiles/profiles';
 import { AuthGuard } from './guards/auth.guard';
-// 👇 EXPORTAR las routes
+
 export const routes: Routes = [
   { 
     path: 'login', 
@@ -25,6 +21,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profiles/profiles').then(m => m.Profiles),
     canActivate: [AuthGuard] 
   },
+  { 
+    path: 'mi-perfil',
+    loadComponent: () => import('./pages/mi-perfil/mi-perfil').then(m => m.MiPerfil),
+    canActivate: [AuthGuard]
+  },
   { path: '', redirectTo: '/posts', pathMatch: 'full' },
   { path: '**', redirectTo: '/posts' }
 ];
@@ -33,4 +34,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -4,10 +4,11 @@ import { Post } from '../../../models/post.model';
 import { PostsService } from '../../services/posts.services';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { CommentSection } from '../comment-section/comment-section';
 
 @Component({
   selector: 'app-post-card',
-  imports : [CommonModule],
+  imports : [CommonModule, CommentSection],
   templateUrl: './post-card.html',
   styleUrls: ['./post-card.css']
 })
@@ -21,6 +22,7 @@ export class PostCardComponent implements OnInit {
 
   hasLiked: boolean = false;
   isOwner: boolean = false;
+  showComments: boolean = false
 
   constructor(
     private postsService: PostsService,
@@ -28,6 +30,10 @@ export class PostCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+  console.log('🔍 Post comments structure:', this.post.comments);
+  console.log('🔍 Post comments type:', typeof this.post.comments);
+  console.log('🔍 Post completo:', this.post);
+  
     this.checkUserInteractions();
   }
 
@@ -51,6 +57,27 @@ export class PostCardComponent implements OnInit {
       this.delete.emit(this.post._id);
     }
   }
+
+  toggleComments() {
+  this.showComments = !this.showComments;
+}
+increaseCommentCount() {
+  if (!this.post.comments) this.post.comments = 0;
+  this.post.comments++;
+}
+
+onCommentAdded(): void {
+  
+  
+  if (typeof this.post.comments === 'number') {
+    this.post.comments += 1;
+    ;
+  } else {
+    
+    this.post.comments = 1;
+  }
+}
+
 
   get timeAgo(): string {
     const now = new Date();
