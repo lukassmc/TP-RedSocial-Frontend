@@ -213,7 +213,7 @@ textarea.form-control {
   border: none;
   color: #fff;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--accent-color) 0%, #059669 100%);
+  background: #764ba2;
   cursor: pointer;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
   display: inline-flex;

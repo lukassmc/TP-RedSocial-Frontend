@@ -1,1 +1,96 @@
-<p>mi-perfil works!</p>
+<div class="mi-perfil-root">
+  <div class="profile-shell">
+    <div class="profile-top">
+      <div class="avatar-col">
+        <img [src]="avatarPreview || defaultAvatarUrl" alt="avatar" class="large-avatar" />
+        <div class="avatar-actions">
+          <button class="btn small" (click)="openEditModal()">Editar perfil</button>
+          <button class="btn ghost" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div class="profile-info-col">
+        <h2 class="fullname">{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h2>
+        <div class="meta">
+          <span class="username">@{{ currentUser?.username }}</span>
+          <span class="dot">•</span>
+          <span class="birth" *ngIf="currentUser?.fechaNacimiento">
+            {{ currentUser?.fechaNacimiento | date:'mediumDate' }}
+          </span>
+        </div>
+        <p class="description">{{ currentUser?.descripcion || '— Sin descripción —' }}</p>
+      </div>
+    </div>
+
+    <div class="profile-lower">
+      <h3>Últimas publicaciones</h3>
+
+      <div *ngIf="postsLoading" class="posts-placeholder">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3]"></div>
+      </div>
+
+      <div class="posts-list" *ngIf="!postsLoading && lastPosts.length === 0">
+        <p class="muted">No hay publicaciones recientes.</p>
+      </div>
+
+      <div class="posts-list" *ngIf="!postsLoading && lastPosts.length">
+        <app-post-card *ngFor="let p of lastPosts" [post]="p"></app-post-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-backdrop" *ngIf="showEditModal">
+  <div class="edit-modal" role="dialog" aria-modal="true">
+    <header class="modal-header">
+      <h3>Editar perfil</h3>
+      <button class="close" (click)="closeEditModal()">&times;</button>
+    </header>
+
+    <div class="modal-body">
+      <div class="edit-grid">
+        <div class="avatar-edit">
+          <img [src]="avatarPreview || defaultAvatarUrl" class="avatar-preview" alt="preview" />
+          <label class="file-label">
+            Cambiar foto
+            <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+          </label>
+          <small class="muted">Max 2MB. JPG/PNG.</small>
+        </div>
+
+        <form [formGroup]="profileForm" class="profile-form" (ngSubmit)="saveProfile()">
+          <div class="row">
+            <input formControlName="nombre" placeholder="Nombre" />
+            <input formControlName="apellido" placeholder="Apellido" />
+          </div>
+
+          <div class="row">
+            <input formControlName="username" placeholder="Nombre de usuario" />
+            <input formControlName="email" placeholder="Correo electrónico" />
+          </div>
+
+          <div class="row">
+            <input type="date" formControlName="fechaNacimiento" />
+            <input formControlName="descripcion" placeholder="Descripción (breve)" />
+          </div>
+
+          <div class="modal-actions">
+            <div class="msgs">
+              <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+              <div class="success" *ngIf="successMsg">{{ successMsg }}</div>
+            </div>
+
+            <div class="buttons">
+              <button type="button" class="btn ghost" (click)="closeEditModal()">Cancelar</button>
+              <button type="submit" [disabled]="saving" class="btn primary">
+                <span *ngIf="!saving">Guardar</span>
+                <span *ngIf="saving">Guardando…</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -70,7 +70,7 @@ export class Profiles implements OnInit {
 
     this.postsService.getMyPosts(3).subscribe({
       next: (post) => {
-        this.userPosts = post;
+        this.userPosts = post.posts;
         this.calculateStats();
         this.loadingPosts = false;
 

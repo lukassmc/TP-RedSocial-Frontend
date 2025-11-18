@@ -21,26 +21,20 @@ interface CurrentUser {
   styleUrls: ['./navbar.css']
 })
 export class NavbarComponent implements OnInit {
-  currentUser: CurrentUser | null = null;
+  currentUser: any = null;
   showUserMenu: boolean = false;
+  private sub: any;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
+  
   ngOnInit(): void {
-    this.loadCurrentUser();
-  }
-
-  // Cargar datos del usuario actual
-  private loadCurrentUser(): void {
-    this.currentUser = this.authService.getCurrentUser();
-    
-    // Si no hay usuario, redirigir al login
-    if (!this.currentUser) {
-      this.router.navigate(['/login']);
-    }
+    this.sub = this.authService.usuarioLogueado$.subscribe(usuario => {
+    this.currentUser = usuario;
+  });
   }
 
   // Alternar menú de usuario
@@ -58,6 +52,11 @@ export class NavbarComponent implements OnInit {
     
     // Cerrar el menú
     this.showUserMenu = false;
+  }
+
+  
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   // Cerrar menú al hacer click fuera

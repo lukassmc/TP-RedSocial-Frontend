@@ -1,73 +1,87 @@
-<!-- src/app/components/navbar/navbar.component.html -->
-<nav class="posts-navbar">
+<nav class="posts-navbar" [class.menu-open]="showUserMenu">
   <div class="navbar-content">
-    
+
     <!-- Brand/Logo -->
     <div class="navbar-brand" (click)="goToPosts()">
       <span class="brand-emoji">🎵</span>
       <span class="brand-text">Noisy</span>
     </div>
 
-    <!-- Navegación principal -->
-    <div class="navbar-links" *ngIf="isAuthenticated">
-      <a 
-        routerLink="/posts" 
-        routerLinkActive="active-link"
-        class="nav-link"
-      >
-        <i class="bi bi-house"></i>
-        Publicaciones
-      </a>
-      <a 
-        routerLink="/profile" 
-        routerLinkActive="active-link"
-        class="nav-link"
-      >
-        <i class="bi bi-person"></i>
-        Mi Perfil
-      </a>
-    </div>
+    <!-- LINKS PRINCIPALES -->
+    <ng-container *ngIf="isAuthenticated">
+      <div class="navbar-links">
+        <a 
+          routerLink="/posts"
+          routerLinkActive="active-link"
+          class="nav-link"
+        >
+          <i class="bi bi-house"></i><span>Publicaciones</span>
+        </a>
 
-    <!-- Usuario -->
-    <div class="navbar-user" *ngIf="isAuthenticated">
-      <div class="user-profile" (click)="toggleUserMenu()">
-        <img 
-          [src]="currentUser?.profilePicture || defaultAvatarUrl" 
-          [alt]="currentUser?.nombre"
-          class="profile-image"
-        />
-        <span class="username">{{ currentUser?.username }}</span>
-        <i class="bi bi-chevron-down" [class.rotate-180]="showUserMenu"></i>
+        <a 
+          routerLink="/profile"
+          routerLinkActive="active-link"
+          class="nav-link"
+        >
+          <i class="bi bi-person"></i><span>Mi Perfil</span>
+        </a>
       </div>
+    </ng-container>
 
-      <!-- Menú desplegable -->
-      <div class="user-menu" *ngIf="showUserMenu">
-        <div class="menu-header">
+    <!-- PERFIL DEL USUARIO -->
+    <ng-container *ngIf="isAuthenticated">
+      <div class="navbar-user">
+
+        <!-- Botón -->
+        <div class="user-profile" (click)="toggleUserMenu()">
           <img 
-            [src]="currentUser?.profilePicture || defaultAvatarUrl" 
+            [src]="currentUser?.profilePicture || defaultAvatarUrl"
             [alt]="currentUser?.nombre"
-            class="menu-profile-image"
+            class="profile-image"
           />
-          <div class="menu-user-info">
-            <strong>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</strong>
-            <span>@{{ currentUser?.username }}</span>
-          </div>
+          <span class="username">{{ currentUser?.username }}</span>
+          <i class="bi bi-chevron-down" [class.rotate-180]="showUserMenu"></i>
         </div>
-        
-        <div class="menu-divider"></div>
-        
-        <button (click)="goToProfile()" class="menu-item">
-          <i class="bi bi-person"></i>
-          Mi Perfil
-        </button>
-        
-        <div class="menu-divider"></div>
-        
-        <button (click)="logout()" class="menu-item logout-btn">
-          <i class="bi bi-box-arrow-right"></i>
-          Cerrar Sesión
-        </button>
+
+        <!-- MENU DROPDOWN -->
+        <div class="user-menu" *ngIf="showUserMenu">
+          <div class="menu-header">
+            <img
+              [src]="currentUser?.profilePicture || defaultAvatarUrl"
+              [alt]="currentUser?.nombre"
+              class="menu-profile-image"
+            />
+
+            <div class="menu-user-info">
+              <strong>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</strong>
+              <span>@{{ currentUser?.username }}</span>
+            </div>
+          </div>
+
+          <div class="menu-divider"></div>
+
+          <button class="menu-item" (click)="goToProfile()">
+            <i class="bi bi-person"></i>
+            Mi Perfil
+          </button>
+
+          <div class="menu-divider"></div>
+
+          <button class="menu-item logout-btn" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar Sesión
+          </button>
+        </div>
+
       </div>
-    </div>
+    </ng-container>
+
   </div>
 </nav>
+
+<!-- BACKDROP para cerrar el menú al hacer click afuera -->
+<div 
+  class="menu-backdrop"
+  *ngIf="showUserMenu"
+  (click)=" this.showUserMenu = false"
+></div>

@@ -93,10 +93,12 @@ export class CreatePostComponent {
     formData.append('content', this.postData.content);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
+      console.log('Imagen adjuntada:', this.selectedFile.name);
     }
 
     this.postsService.createPost(formData).subscribe({
       next: () => {
+        console.log('Publicación creada con imagen');
         this.handleSuccess();
       },
       error: (err) => {
@@ -123,12 +125,28 @@ export class CreatePostComponent {
     this.postCreated.emit(); 
   }
 
-  private handleError(err: any): void {
-    this.loading = false;
-    this.error = err.error?.message || 'Error al crear la publicación';
-    console.error('Error creating post:', err);
-  }
+ private handleError(err: any): void {
+  this.loading = false;
+  
+  console.error(' Error completo:', err);
+  console.error(' Status:', err.status);
+  console.error(' Error response:', err.error);
+  
 
+  if (err.status === 400) {
+    console.error(' Detalles del error 400:', err.error);
+    
+    if (err.error.message) {
+      this.error = `Error: ${err.error.message}`;
+    } else if (err.error.error) {
+      this.error = `Error: ${err.error.error}`;
+    } else {
+      this.error = 'Datos inválidos. Revisa los campos.';
+    }
+  } else {
+    this.error = err.error?.message || 'Error inesperado al crear la publicación';
+  }
+}
   private resetForm(): void {
     this.postData = {
       title: '',

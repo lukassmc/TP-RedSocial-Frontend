@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Post, CreatePost, PostsResponse } from '../../models/post.model';
 import { AuthService } from './auth.service';
 
@@ -9,30 +9,47 @@ import { AuthService } from './auth.service';
 })
 export class PostsService {
 
-    private apiUrl= 'https://tp-redsocial-backend-im15.onrender.com/posts';
+    private apiUrl= 'http://localhost:3000/posts';
 
     constructor(private http: HttpClient, private authService: AuthService){};
 
-    getPosts(page: number = 1, limit: number = 10, sortBy: 'date' | 'likes' = 'date') : Observable<PostsResponse>{
+    getPosts(page: number = 1, limit: number = 10, sortBy: 'date' | 'likes' = 'date', userId? :string) : Observable<PostsResponse>{
         let params = new HttpParams()
         .set('page', page.toString())
         .set('limit', limit.toString())
         .set('sortBy', sortBy);
+
+        if(userId){
+            params= params.set('userId', userId)
+        }
         
         return this.http.get<PostsResponse>(this.apiUrl, {params});
 
     }
 
-    getMyPosts(limit: number =3) : Observable<Post[]>{
+    getMyPosts(limit: number =3) : Observable<{ posts: Post[] }>{
 
         return this.http.get<Post[]>(`${this.apiUrl}/my-posts`, {
             params: new HttpParams().set('limit', limit.toString())
-        });
+        }).pipe(
+            map(posts => ({ posts }))
+        );
     }
 
-    createPost(postData: any) : Observable<Post>{
-        return this.http.post<any>(this.apiUrl, postData)
+    createPost(postData: any): Observable<Post> {
 
+        if (postData instanceof FormData) {
+      
+            return this.http.post<Post>(`${this.apiUrl}/with-image`, postData);
+        } else {
+     
+            const formattedData = {
+            title: postData.title,
+            content: postData.content,
+            imageUrl: postData.imageUrl || undefined
+            };
+            return this.http.post<Post>(this.apiUrl, formattedData);
+    }
     }
 
     deletePost(postId: string) : Observable<void>{

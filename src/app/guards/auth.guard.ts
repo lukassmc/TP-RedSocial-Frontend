@@ -11,13 +11,19 @@ export class AuthGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(): boolean {
+ canActivate(): boolean {
   
+    if (!this.authService.isTokenValid()) {
+      console.log('Token inválido o expirado');
+      this.router.navigate(['/login']);
+      return false;
+    };
+    
     if (this.authService.isAuthenticated()) {
       return true;
     } else {
       this.router.navigate(['/login']);
       return false;
-    }
-  }
+    };
+  };
 }
