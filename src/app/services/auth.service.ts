@@ -1,4 +1,5 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject ,tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
@@ -47,7 +48,7 @@ export class AuthService {
   // will proxy `/api` to the real backend URL defined in the `API_URL` env var.
   // When running locally without the proxy, you can set API_URL in the server
   // or run the backend on localhost:3000.
-  private apiUrl = 'http://localhost:3000/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private usuarioLogueadoSubject = new BehaviorSubject<any>(this.getCurrentUser());
   public usuarioLogueado$ = this.usuarioLogueadoSubject.asObservable();
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { map, Observable } from 'rxjs';
 import { Post, CreatePost, PostsResponse } from '../../models/post.model';
 import { AuthService } from './auth.service';
@@ -9,7 +10,7 @@ import { AuthService } from './auth.service';
 })
 export class PostsService {
 
-    private apiUrl= 'http://localhost:3000/posts';
+    private apiUrl= `${environment.apiUrl}/posts`;
 
     constructor(private http: HttpClient, private authService: AuthService){};
 
