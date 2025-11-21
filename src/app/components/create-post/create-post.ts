@@ -3,11 +3,13 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PostsService } from '../../services/posts.services';
+import { MusicSearch } from '../music-search/music-search';
+import {Song} from '../../models/music.model'
 
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MusicSearch],
   templateUrl: './create-post.html',
   styleUrls: ['./create-post.css']
 })
@@ -21,11 +23,14 @@ export class CreatePostComponent {
   postData = {
     title: '',
     content: '',
-    imageUrl: ''
+    imageUrl: '',
+    music: ''
   };
 
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  selectedSong: Song | null = null
+  showMusicSelector = false;
 
   constructor(private postsService: PostsService) {}
 
@@ -63,6 +68,19 @@ export class CreatePostComponent {
     }
   }
 
+  toggleMusicSelector() {
+  this.showMusicSelector = !this.showMusicSelector;
+}
+
+  onSongSelected(song: any) {
+    this.selectedSong = song
+  }
+
+  removeSong() {
+  this.selectedSong = null;
+}
+
+
   removeImage(): void {
     this.selectedFile = null;
     this.imagePreview = null;
@@ -82,9 +100,12 @@ export class CreatePostComponent {
     // Crear FormData si hay imagen, sino enviar JSON normal
     if (this.selectedFile) {
       this.createPostWithImage();
+    } else if(this.selectedSong){
+      this.createPostWithMusic();
     } else {
       this.createPostWithoutImage();
     }
+
   }
 
   private createPostWithImage(): void {
@@ -117,6 +138,27 @@ export class CreatePostComponent {
       }
     });
   }
+
+  private createPostWithMusic(){
+    const formData = new FormData();
+    formData.append('title', this.postData.title)
+    formData.append('content', this.postData.content)
+
+    if (this.selectedSong){
+       formData.append('music', JSON.stringify(this.selectedSong))
+    }
+
+    this.postsService.createPost(this.postData).subscribe({
+      next: () => {
+        this.handleSuccess();
+      },
+      error: (err) => {
+        this.handleError(err);
+      }
+    });
+
+  }
+
 
   private handleSuccess(): void {
     this.loading = false;
@@ -151,7 +193,8 @@ export class CreatePostComponent {
     this.postData = {
       title: '',
       content: '',
-      imageUrl: ''
+      imageUrl: '',
+      music : ''
     };
     this.selectedFile = null;
     this.imagePreview = null;

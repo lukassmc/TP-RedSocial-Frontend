@@ -36,18 +36,19 @@
       class="post-image"
     >
 
-    <!-- Música (futura implementación) -->
-    <div *ngIf="post.music" class="music-section">
-      <div class="music-title">
-        <span class="music-icon">🎵</span>
-        {{ post.music.trackName }}
-      </div>
-      <div class="music-artist">{{ post.music.artistName }} - {{ post.music.albumName }}</div>
+    <div *ngIf="post.music" class="music-container">
+
+    <div class="music-info">
+      <strong>{{ post.music.trackName }}</strong>
+      <p>{{ post.music.artistName }} - {{ post.music.albumName }}</p>
     </div>
-    
-    <div *ngIf="!post.music && !post.imageUrl" class="empty-music">
-      📝 Publicación de texto
-    </div>
+
+    <!-- Reproductor -->
+    <audio controls>
+      <source [src]="post.music.previewUrl" type="audio/mpeg">
+      Tu navegador no soporta audio.
+    </audio>
+
   </div>
 
   <!-- Stats y acciones -->

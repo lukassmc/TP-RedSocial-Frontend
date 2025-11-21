@@ -1,0 +1,30 @@
+<div class="music-search-container">
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Buscar canción..."
+      [(ngModel)]="searchInput"
+      (keyup.enter)="search()"
+    />
+    <button (click)="search()">Buscar</button>
+  </div>
+
+  <div *ngIf="loading">Buscando canciones...</div>
+
+  <ul class="results-list" *ngIf="results.length > 0">
+    <li *ngFor="let song of results" class="song-item">
+      <img [src]="song.artworkUrl100" alt="">
+      <div class="song-info">
+        <strong>{{ song.trackName }}</strong>
+        <span>{{ song.artistName }}</span>
+      </div>
+      <button (click)="selectSong(song)">Seleccionar</button>
+    </li>
+  </ul>
+
+  <p *ngIf="!loading && results.length === 0 && searchInput.length > 0">
+    No se encontraron resultados.
+  </p>
+
+</div>

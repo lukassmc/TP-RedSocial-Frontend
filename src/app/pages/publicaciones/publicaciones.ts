@@ -93,21 +93,36 @@ export class Publicaciones implements OnInit {
       }
     })
   }
+
    onUnlike(postId: string): void {
-    this.postsService.unlikePost(postId).subscribe({
-      next: (updatedPost) => {
+  const originalPostIndex = this.posts.findIndex(p => p._id === postId);
+  const originalPost = this.posts[originalPostIndex];
+  
+  console.log('💔 Quitando like...', { postId, originalPost });
+
+  this.postsService.unlikePost(postId).subscribe({
+    next: (updatedPost) => {
+      console.log('✅ Respuesta del backend:', updatedPost);
       
-        const index = this.posts.findIndex(p => p._id === postId);
-        if (index !== -1) {
-          this.posts[index] = updatedPost;
+      if (originalPostIndex !== -1) {
+       
+        if (!updatedPost.title || !updatedPost.content) {
+          console.warn('⚠️ Post incompleto del backend, combinando datos...');
+          this.posts[originalPostIndex] = {
+            ...originalPost,
+            likes: updatedPost.likes || []
+          };
+        } else {
+          this.posts[originalPostIndex] = updatedPost;
         }
-      },
-      error: (err) => {
-        console.error('Error quitando like:', err);
-        alert('Error al quitar like');
+        console.log('✅ Post actualizado en la UI');
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error('❌ Error en unlike:', err);
+    }
+  });
+}
 
   onPostCreated(): void {
     this.loadPosts();

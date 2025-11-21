@@ -30,8 +30,6 @@ export class PostCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  console.log('🔍 Post comments structure:', this.post.comments);
-  console.log('🔍 Post comments type:', typeof this.post.comments);
   console.log('🔍 Post completo:', this.post);
   
     this.checkUserInteractions();
