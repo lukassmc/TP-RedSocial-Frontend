@@ -1,42 +1,127 @@
 .music-search-container {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 16px;
+  border-radius: 14px;
+
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+
 
 .search-bar {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
 }
 
 .search-bar input {
   flex: 1;
-  padding: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d0d0d0;
+  font-size: 15px;
 }
+
+.search-bar button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #6b4bff;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.search-bar button:hover {
+  background: #5533ff;
+}
+
+
+.results-wrapper {
+  max-height: 300px;    
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+
+.results-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.results-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.results-wrapper::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+
 
 .results-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
+
 
 .song-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
+
+  padding: 10px 6px;
+  border-bottom: 1px solid #ececec;
+
+  transition: background 0.15s;
 }
 
-.song-item img {
-  width: 50px;
-  border-radius: 4px;
+.song-item:hover {
+  background: #f7f7ff;
 }
+
+
+.song-item img {
+  width: 55px;
+  height: 55px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 
 .song-info {
   flex: 1;
   display: flex;
   flex-direction: column;
+  line-height: 1.2;
 }
 
-.song-item button {
-  padding: 6px 10px;
+.song-info strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.song-info span {
+  font-size: 12px;
+  color: #666;
+}
+
+
+.select-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #6b4bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 13px;
+}
+
+.select-btn:hover {
+  background: #5533ff;
 }

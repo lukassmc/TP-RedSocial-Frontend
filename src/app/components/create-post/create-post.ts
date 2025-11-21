@@ -100,10 +100,14 @@ export class CreatePostComponent {
     // Crear FormData si hay imagen, sino enviar JSON normal
     if (this.selectedFile) {
       this.createPostWithImage();
+      console.log('post con imagen');
+      
     } else if(this.selectedSong){
       this.createPostWithMusic();
+      console.log('post con musica');
     } else {
       this.createPostWithoutImage();
+      console.log('post simple');
     }
 
   }

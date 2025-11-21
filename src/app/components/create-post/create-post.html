@@ -61,24 +61,6 @@
           <div class="upload-subtext">PNG, JPG, WEBP hasta 5MB</div>
         </label>
       </div>
-
-      <button type="button" (click)="toggleMusicSelector()">
-        🎵 Agregar música
-      </button>
-
-      <div *ngIf="showMusicSelector" class="music-modal">
-        <app-music-search (songSelected)="onSongSelected($event)"></app-music-search>
-        <button (click)="toggleMusicSelector()">Cerrar</button>
-      </div>
-
-      <!-- Mostrar canción seleccionada -->
-      <div *ngIf="selectedSong" class="selected-song">
-        <img [src]="selectedSong.artwork" alt="">
-        <p><strong>{{ selectedSong.trackName }}</strong> - {{ selectedSong.artistName }}</p>
-        <button (click)="removeSong()">Quitar música</button>
-      </div>
-
-
       <div *ngIf="imagePreview" class="image-preview">
         <img [src]="imagePreview" alt="Preview" class="preview-image" />
         <button (click)="removeImage()" class="remove-image" title="Quitar imagen">
@@ -87,6 +69,21 @@
       </div>
     </div>
 
+    <button type="button" class="music-btn" (click)="toggleMusicSelector()">
+  🎵 Agregar música
+</button>
+
+<div *ngIf="showMusicSelector" class="music-selector-box">
+  
+  <!-- Buscador -->
+  <app-music-search 
+      (songSelected)="onSongSelected($event)"
+      class="music-scroll-panel">
+  </app-music-search>
+
+  <img [src]="selectedSong.artwork" alt="">
+
+</div>
    
     <div class="form-actions">
       <button 
