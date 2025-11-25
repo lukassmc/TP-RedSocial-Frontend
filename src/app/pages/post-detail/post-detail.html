@@ -1,27 +1,76 @@
 <div class="post-detail-container" *ngIf="post">
-  
-  <!-- POST COMPLETO -->
+
   <app-post-card [post]="post"></app-post-card>
 
-  <!-- COMENTARIOS -->
-  <h3>Comentarios</h3>
 
-  <textarea [(ngModel)]="newComment" placeholder="Escribe un comentario..."></textarea>
-  <button (click)="addComment()">Comentar</button>
+  <div class="comments-section">
+    <h3>Comentarios</h3>
 
-  <div *ngFor="let c of comments" class="comment-item">
-    <div>
-      <strong>{{ c.user.username }}</strong> — {{ c.updatedAt ? "(editado)" : "" }}
-      <p>{{ c.content }}</p>
+  
+    <div class="new-comment-form">
+      <textarea 
+        [(ngModel)]="newComment" 
+        placeholder="Escribe un comentario..."
+        maxlength="500"
+      ></textarea>
+      <div class="comment-actions">
+        <span class="char-count">{{ newComment.length || 0 }}/500</span>
+        <button 
+          (click)="addComment()" 
+          [disabled]="!newComment || newComment.trim() === ''"
+        >
+          Comentar
+        </button>
+      </div>
     </div>
 
-    <button *ngIf="c.user._id === userId" (click)="enableEdit(c)">Editar</button>
-
-    <div *ngIf="c.editing">
-      <textarea [(ngModel)]="c.content"></textarea>
-      <button (click)="saveEdit(c)">Guardar</button>
+    <div class="comments-list">
+      <div *ngFor="let c of comments; trackBy: trackByCommentId" class="comment-item">
+    
+        <div class="comment-avatar" *ngIf="!c.userId?.profilePicture">
+          {{ c.userId?.username?.charAt(0).toUpperCase() || 'U' }}
+        </div>
+        <img 
+          *ngIf="c.userId?.profilePicture" 
+          [src]="c.userId.profilePicture" 
+          class="comment-avatar"
+          alt="Avatar de {{ c.userId?.username }}"
+          onerror="this.onerror=null; this.src='assets/default-avatar.png';"
+        >
+        
+        <div class="comment-content">
+          <div class="comment-header">
+            <strong>{{ c.userId?.username || 'Usuario' }}</strong>
+            <span class="comment-date">{{ c.createdAt | date:'medium' }}</span>
+            <span *ngIf="c.edited" class="edited-indicator">(editado)</span>
+          </div>
+          
+          <p *ngIf="!c.editing">{{ c.content }}</p>
+          
+          <div *ngIf="c.editing" class="edit-form">
+            <textarea [(ngModel)]="c.content"></textarea>
+            <div class="edit-actions">
+              <button (click)="saveEdit(c)">Guardar</button>
+              <button (click)="cancelEdit(c)" class="cancel-btn">Cancelar</button>
+            </div>
+          </div>
+          
+          <div class="comment-footer">
+            <button *ngIf="c.userId?._id === userId && !c.editing" (click)="enableEdit(c)">
+              Editar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- BOTÓN CARGAR MÁS -->
+    <button 
+      *ngIf="hasMore" 
+      (click)="loadMore()" 
+      class="load-more-btn"
+    >
+      Cargar más comentarios
+    </button>
   </div>
-
-  <button *ngIf="hasMore" (click)="loadMore()">Cargar más</button>
 </div>

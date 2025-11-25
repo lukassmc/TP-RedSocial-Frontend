@@ -48,12 +48,17 @@ post: any;
     this.postService.getPostById(id).subscribe(p => this.post = p);
   }
 
-  loadComments(id: string) {
-    this.commentService.getComments(id, this.page, this.limit).subscribe((resp: any) => {
+ loadComments(id: string) {
+  this.commentService.getComments(id, this.page, this.limit).subscribe({
+    next: (resp: any) => {
       this.comments = [...this.comments, ...resp.comments];
-      if (resp.comments.length < this.limit) this.hasMore = false;  
-    });
-  }
+      if (resp.comments.length < this.limit) this.hasMore = false;
+    },
+    error: (err) => {
+      console.error('Error al cargar comentarios:', err);
+    }
+  });
+}
 
   loadMore() {
     this.page++;
@@ -71,6 +76,13 @@ post: any;
   enableEdit(comment: Comment) {
     comment.editing = true;
   }
+  trackByCommentId(index: number, comment: Comment): string {
+  return comment._id;
+}
+cancelEdit(comment: Comment) {
+
+  this.loadComments(this.post._id);
+}
 
   saveEdit(comment: Comment) {
     this.commentService.updateComment(comment._id, comment.content).subscribe(c => {
