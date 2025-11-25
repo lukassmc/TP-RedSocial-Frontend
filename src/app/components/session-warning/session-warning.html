@@ -1,0 +1,14 @@
+<div *ngIf="showWarning$ | async" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3>Advertencia de Sesión</h3>
+    </div>
+    <div class="modal-body">
+      <p>Tu sesión expirará en 5 minutos. ¿Deseas extender tu sesión?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="extendSession()">Extender Sesión</button>
+      <button class="btn btn-secondary" (click)="logout()">Cerrar Sesión</button>
+    </div>
+  </div>
+</div>

@@ -1,17 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar';
 import { SessionService } from './services/session.service';
 import { AuthService } from './services/auth.service';
+import { Loading } from './components/loading/loading';
+import { SessionWarning } from './components/session-warning/session-warning';
+import { Router } from '@angular/router';
+import { PLATFORM_ID } from '@angular/core';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [CommonModule,RouterOutlet, NavbarComponent, Loading, SessionWarning],
   template: `
-    <app-navbar></app-navbar>
-    <main class="main-content">
-      <router-outlet></router-outlet>
-    </main>
+    <app-loading *ngIf="isLoading"></app-loading>
+    <ng-container *ngIf="!isLoading">
+      <app-navbar></app-navbar>
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+      <app-session-warning></app-session-warning>
+    </ng-container>
   `,
   styles: [`
     .main-content {
@@ -20,22 +30,41 @@ import { AuthService } from './services/auth.service';
     }
   `]
 })
-export class App {
+export class App implements OnInit {
   title = 'Noisy';
-  constructor(private sessionService: SessionService, private authService: AuthService) {}
+  isLoading = true;
 
-ngOnInit() {
-  this.sessionService.sessionExpires$.subscribe(shouldShow => {
-    if (shouldShow) this.showExtendSessionModal();
-  });
-}
+  
+  private sessionService = inject(SessionService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
 
-showExtendSessionModal() {
-  const confirmExtend = confirm("Tu sesión expirará en 5 minutos. ¿Deseás extenderla?");
-  if (confirmExtend) {
-    this.authService.refreshToken().subscribe(() => {
-      this.sessionService.startSessionTimer(); // Reiniciar timer
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+   
+      setTimeout(() => {
+       
+        if (this.authService.isTokenValid()) {
+          this.router.navigate(['/publicaciones']);
+        } else {
+          this.router.navigate(['/login']);
+        }
+        this.isLoading = false;
+      }, 2000); 
+    }
+
+    this.sessionService.sessionExpires$.subscribe(shouldShow => {
+      if (shouldShow) this.showExtendSessionModal();
     });
   }
-}
+
+  showExtendSessionModal() {
+    const confirmExtend = confirm("Tu sesión expirará en 5 minutos. ¿Deseás extenderla?");
+    if (confirmExtend) {
+      this.authService.refreshToken().subscribe(() => {
+        this.sessionService.startSessionTimer(); 
+      });
+    }
+  }
 }
