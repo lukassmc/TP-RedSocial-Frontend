@@ -1,4 +1,4 @@
-// src/app/components/post-card/post-card.component.ts
+import { Router } from '@angular/router';
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Post } from '../../../models/post.model';
 import { PostsService } from '../../services/posts.services';
@@ -26,7 +26,8 @@ export class PostCardComponent implements OnInit {
 
   constructor(
     private postsService: PostsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +40,10 @@ export class PostCardComponent implements OnInit {
     this.hasLiked = this.postsService.hasLiked(this.post);
     this.isOwner = this.postsService.isPostOwner(this.post);
   }
-
+  
+  openPost() {
+  this.router.navigate(['/posts', this.post._id]);
+}
   onLike(): void {
     if (this.hasLiked) {
       this.unlike.emit(this.post._id);

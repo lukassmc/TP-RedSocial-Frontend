@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Comment } from '../models/comment.model';
 import { environment } from '../../environments/environment';
@@ -12,10 +12,31 @@ export class CommentsService {
 
   constructor(private http: HttpClient) {}
 
-  getComments(postId: string): Observable<Comment[]> {
+getComments(
+  postId: string,
+  page: number = 1,
+  limit: number = 10
+): Observable<{ comments: Comment[]; total: number; page: number; limit: number }> {
   const token = localStorage.getItem('token');
-  return this.http.get<Comment[]>(
-    `${this.apiUrl}/${postId}`,
+
+  let params = new HttpParams()
+    .set('page', page.toString())
+    .set('limit', limit.toString());
+
+  return this.http.get<{ comments: Comment[], total: number, page: number, limit: number }>(
+  `${this.apiUrl}/post/${postId}`,
+  {
+    params,
+    headers: { Authorization: `Bearer ${token}` }
+  }
+);
+}
+  updateComment(commentId: string, content: string): Observable<Comment> {
+  const token = localStorage.getItem('token');
+
+  return this.http.put<Comment>(
+    `${this.apiUrl}/${commentId}`,
+    { content },
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -27,7 +48,7 @@ export class CommentsService {
 addComment(postId: string, content: string): Observable<Comment> {
   const token = localStorage.getItem('token');
   return this.http.post<Comment>(
-    `${this.apiUrl}/${postId}`,
+    `${this.apiUrl}/post/${postId}`,
     { content },
     {
       headers: {

@@ -1,0 +1,27 @@
+<div class="post-detail-container" *ngIf="post">
+  
+  <!-- POST COMPLETO -->
+  <app-post-card [post]="post"></app-post-card>
+
+  <!-- COMENTARIOS -->
+  <h3>Comentarios</h3>
+
+  <textarea [(ngModel)]="newComment" placeholder="Escribe un comentario..."></textarea>
+  <button (click)="addComment()">Comentar</button>
+
+  <div *ngFor="let c of comments" class="comment-item">
+    <div>
+      <strong>{{ c.user.username }}</strong> — {{ c.updatedAt ? "(editado)" : "" }}
+      <p>{{ c.content }}</p>
+    </div>
+
+    <button *ngIf="c.user._id === userId" (click)="enableEdit(c)">Editar</button>
+
+    <div *ngIf="c.editing">
+      <textarea [(ngModel)]="c.content"></textarea>
+      <button (click)="saveEdit(c)">Guardar</button>
+    </div>
+  </div>
+
+  <button *ngIf="hasMore" (click)="loadMore()">Cargar más</button>
+</div>

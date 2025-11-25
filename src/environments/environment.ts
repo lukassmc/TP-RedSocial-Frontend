@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://tp-redsocial-backend-im15.onrender.com'
+  apiUrl: 'http://localhost:3000'
 };

@@ -8,5 +8,7 @@ export interface Comment {
     profilePicture?: string;
   };
   content: string;
+  editing?:boolean;
+  updatedAt?:Date;
   createdAt: string;
 }

@@ -105,6 +105,25 @@ export class AuthService {
   }
 }
 
+getUserId(): string | null {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.sub || payload._id || null;
+  } catch (e) {
+    return null;
+  }
+}
+refreshToken() {
+  const refreshToken = localStorage.getItem('refreshToken');
+  return this.http.post(`${this.apiUrl}/auth/refresh`, { refreshToken }).pipe(
+    tap((resp: any) => {
+      localStorage.setItem('token', resp.token);
+    })
+  );
+}
 isTokenValid(): boolean {
   const token = localStorage.getItem('access_token');
   if (!token) return false;

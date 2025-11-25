@@ -36,9 +36,10 @@ export class CommentSection implements OnInit {
     this.commentsService.getComments(this.postId)
       .pipe(take(1))
       .subscribe({
-        next: comments => {
-          this.comments = comments;
-          this.loading = false;
+        next: resp => {
+        this.comments = resp.comments;
+        this.loading = false;
+
         },
         error: err => {
           console.error('Error cargando comentarios', err);

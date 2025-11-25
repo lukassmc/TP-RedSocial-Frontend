@@ -1,4 +1,4 @@
-<div class="comment-section">
+<div class="comment-section" (click)=" $event.stopPropagation()">
   <div *ngIf="loading">Cargando comentarios...</div>
   <div *ngIf="!loading && comments.length === 0">No hay comentarios</div>
 

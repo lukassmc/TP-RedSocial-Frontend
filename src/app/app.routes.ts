@@ -26,6 +26,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/mi-perfil/mi-perfil').then(m => m.MiPerfil),
     canActivate: [AuthGuard]
   },
+  {
+    path:'posts/:id',
+    loadComponent: () => import('./pages/post-detail/post-detail').then(m => m.PostDetail),
+    canActivate : [AuthGuard]
+  },
   { path: '', redirectTo: '/posts', pathMatch: 'full' },
   { path: '**', redirectTo: '/posts' }
 ];

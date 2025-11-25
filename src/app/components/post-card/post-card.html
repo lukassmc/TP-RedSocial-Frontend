@@ -1,5 +1,5 @@
 
-<div class="post-card">
+<div class="post-card" (click)="openPost()">
   <!-- Header con información del usuario -->
   <div class="post-header">
     <img 
@@ -15,7 +15,7 @@
     <!-- Botón eliminar (solo para dueño) -->
     <button 
       *ngIf="showDeleteButton && isOwner"
-      (click)="onDelete()"
+      (click)="onDelete(); $event.stopPropagation()"
       class="delete-btn"
       title="Eliminar publicación"
     >
@@ -56,7 +56,7 @@
     <div class="action-buttons">
       <!-- Botón Like -->
       <button 
-        (click)="onLike()"
+        (click)="onLike(); $event.stopPropagation()"
         [class.liked]="hasLiked"
         [class.like-animation]="hasLiked"
         class="action-btn"
@@ -70,7 +70,7 @@
       <button 
           class="action-btn" 
           title="Comentarios"
-          (click)="toggleComments()"
+          (click)="toggleComments(); $event.stopPropagation()"
         >
         <i>💬</i>
         
