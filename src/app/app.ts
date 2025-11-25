@@ -54,17 +54,5 @@ export class App implements OnInit {
       }, 2000); 
     }
 
-    this.sessionService.sessionExpires$.subscribe(shouldShow => {
-      if (shouldShow) this.showExtendSessionModal();
-    });
-  }
-
-  showExtendSessionModal() {
-    const confirmExtend = confirm("Tu sesión expirará en 5 minutos. ¿Deseás extenderla?");
-    if (confirmExtend) {
-      this.authService.refreshToken().subscribe(() => {
-        this.sessionService.startSessionTimer(); 
-      });
-    }
   }
 }
