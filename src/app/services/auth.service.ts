@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, of, catchError } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
@@ -179,6 +179,22 @@ export class AuthService {
     }
   }
 
+
+
+validateToken(): Observable<any> {
+  const token = localStorage.getItem('access_token');
+  if (!token) {
+    return of({ valid: false });
+  }
+  return this.http.get(`${this.apiUrl}/auth/validate`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }).pipe(
+    catchError(() => {
+    
+      return of({ valid: false });
+    })
+  );
+}
 
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {

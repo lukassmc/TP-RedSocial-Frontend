@@ -112,15 +112,23 @@ export class MiPerfil implements OnInit, OnDestroy {
       next: posts =>{
           console.log("🟦 Posts recibidos:", posts);
           console.log("🟨 Tipo:", Array.isArray(posts), "Cantidad:", posts?.length);
-        this.lastPosts = posts;
-        this.postsLoading = false;
+   
+          if (posts && posts.length > 0) {
+            console.log("🔍 Primer post recibido:", posts[0]);
+            console.log("🔍 ID del primer post:", posts[0]._id);
+            console.log("🔍 Tipo de dato del ID:", typeof posts[0]._id);
+          }
+          
+
+          this.lastPosts = posts;
+          this.postsLoading = false;
       },
       error: err =>{
         console.error('Error cargando las últimas publicaciones', err);
         this.postsLoading = false;
       }  
     });
-  }
+}
 
     openEditModal() {
     this.showEditModal = true;

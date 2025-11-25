@@ -33,7 +33,7 @@ export class PostsService {
     }
 
     getMyPosts(limit: number = 3): Observable<Post[]> {
-        const token = localStorage.getItem('token')
+        
         
         return this.http.get<Post[]>(`${this.apiUrl}/my-posts`, {
             
