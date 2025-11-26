@@ -18,6 +18,7 @@ export class Login {
   errorMessage: string = '';
   successMessage: string = '';
   passwordVisible = false;
+  isAccountDisabled = false;
 
   loginForm = this.formBuilder.group({
     identifier: ['', [Validators.required, Validators.minLength(3)]],
@@ -32,7 +33,7 @@ export class Login {
     // Limpiar mensajes
     this.errorMessage = '';
     this.successMessage = '';
-
+    this.isAccountDisabled = false;
     // Validar formulario
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -62,17 +63,22 @@ export class Login {
         }, 1000);
       },
       error: (error) => {
-        console.error('Error en login:', error);
-        
-        // Manejar diferentes tipos de errores
-        if (error.status === 401) {
-          this.errorMessage = 'Usuario o contraseña incorrectos';
-        } else if (error.status === 0) {
-          this.errorMessage = 'No se pudo conectar con el servidor. Verifica que el backend esté corriendo.';
-        } else {
-          this.errorMessage = error.error?.message || 'Error al iniciar sesión';
+          console.error('Error en login:', error);
+          this.errorMessage = '';
+          this.successMessage = '';
+          this.isAccountDisabled = false;
+
+          if (error.status === 401) {
+            this.errorMessage = 'Usuario o contraseña incorrectos';
+          } else if (error.status === 403) { 
+            
+            this.isAccountDisabled = true;
+          } else if (error.status === 0) {
+            this.errorMessage = 'No se pudo conectar con el servidor. Verifica que el backend esté corriendo.';
+          } else {
+            this.errorMessage = error.error?.message || 'Error al iniciar sesión.';
+          }
         }
-      }
     });
   }
 }

@@ -28,6 +28,10 @@
         <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
           <i class="bi bi-exclamation-triangle"></i> {{ errorMessage }}
         </div>
+        <div *ngIf="isAccountDisabled" class="alert alert-warning" role="alert">
+          <i class="bi bi-lock-fill"></i>
+            Tu cuenta ha sido deshabilitada por un administrador. Por favor, contacta a soporte para más información.
+        </div>
         <div *ngIf="successMessage" class="alert alert-success" role="alert">
           <i class="bi bi-check-circle"></i> {{ successMessage }}
         </div>
