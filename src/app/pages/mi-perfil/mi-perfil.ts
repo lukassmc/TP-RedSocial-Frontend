@@ -10,6 +10,7 @@ import { PostsService } from '../../services/posts.services';
 import { PostCardComponent } from '../../components/post-card/post-card';
 import { Post } from '../../../models/post.model';
 import { UsersService } from '../../services/user.service';
+import { dateNotInFuture, minAge } from '../../validators/date.validators';
 @Component({
   selector: 'app-mi-perfil',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, PostCardComponent, DatePipe],
@@ -55,7 +56,7 @@ export class MiPerfil implements OnInit, OnDestroy {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email]],
       description: ['', [Validators.maxLength(200)]],
-      birthdate: ['']
+      birthdate: ['', Validators.required, dateNotInFuture(), minAge(13)]
     });
 
 

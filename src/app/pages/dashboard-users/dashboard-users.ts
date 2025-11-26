@@ -25,9 +25,9 @@ export class DashboardUsers implements OnInit {
   ) {
    
     this.createUserForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      nombre: ['', [Validators.required, Validators.maxLength(30)]],
+      apellido: ['', [Validators.required, Validators.maxLength(30)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       birthdate: ['', Validators.required, dateNotInFuture(), minAge(13) ],
