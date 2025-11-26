@@ -6,6 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
 import { inject } from '@angular/core';
+import { SessionService } from './session.service';
 
 export interface RegisterData {
   nombre: string;
@@ -47,8 +48,8 @@ export class AuthService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
+  private sessionService = inject(SessionService);
   private apiUrl = `${environment.apiUrl}/auth`;
-  
 
   private usuarioLogueadoSubject = new BehaviorSubject<any>(this.getCurrentUser());
   public usuarioLogueado$ = this.usuarioLogueadoSubject.asObservable();
@@ -91,6 +92,7 @@ export class AuthService {
       localStorage.setItem('token_expiration', expirationTime.toString());
       
       this.setUsuarioLogueado(response.user);
+      this.sessionService.startSessionTimer();
     }
   }
 
@@ -169,6 +171,8 @@ export class AuthService {
           
           const expirationTime = Date.now() + ((response.expiresIn || 15 * 60) * 1000);
           localStorage.setItem('token_expiration', expirationTime.toString());
+          
+          this.sessionService.startSessionTimer();
         }
       })
     );

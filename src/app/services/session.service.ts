@@ -19,10 +19,10 @@ export class SessionService {
   private sessionTimer: any;
   private warningTimer: any;
   private sessionTimeout: number = 2 * 60 * 1000;
-  private warningTime: number = 1 * 60 * 1000;
+  private warningTime: number = 30 * 1000;
 
   constructor() {
-    this.initializeSessionTimers();
+    
   }
 
   private initializeSessionTimers(): void {
@@ -38,21 +38,27 @@ export class SessionService {
       
       if (remainingTime > 0) {
   
-        const warningTime = remainingTime - (5 * 60 * 1000);
+        const timeUntilWarning = remainingTime - this.warningTime;
         
-        if (warningTime > 0) {
-          this.warningTimer = timer(warningTime).subscribe(() => {
-            console.log('Quedan 5 minutos de sesión');
+        if (timeUntilWarning > 0) {
+
+          this.warningTimer = timer(timeUntilWarning).subscribe(() => {
+            console.log('Quedan 2 minutos de sesión');
             this.sessionWarningSubject.next(true);
           });
+        } else {
+          console.log('Sesión en período de advertencia (recarga tardía).');
+          this.sessionWarningSubject.next(true);
         }
         
-   
+        
         this.sessionTimer = timer(remainingTime).subscribe(() => {
           console.log('Sesión expirada');
           this.sessionWarningSubject.next(false);
           
         });
+      } else {
+         this.clearSessionTimers();
       }
     }
   }

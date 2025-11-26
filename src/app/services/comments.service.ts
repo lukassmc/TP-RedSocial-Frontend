@@ -12,25 +12,25 @@ export class CommentsService {
 
   constructor(private http: HttpClient) {}
 
-getComments(
-  postId: string,
-  page: number = 1,
-  limit: number = 10
-): Observable<{ comments: Comment[]; total: number; page: number; limit: number }> {
-  const token = localStorage.getItem('token');
+  getComments(
+    postId: string,
+    page: number = 1,
+    limit: number = 10
+  ): Observable<{ comments: Comment[]; total: number; page: number; limit: number }> {
+    const token = localStorage.getItem('token');
 
-  let params = new HttpParams()
-    .set('page', page.toString())
-    .set('limit', limit.toString());
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
 
-  return this.http.get<{ comments: Comment[], total: number, page: number, limit: number }>(
-  `${this.apiUrl}/post/${postId}`,
-  {
-    params,
-    headers: { Authorization: `Bearer ${token}` }
+    return this.http.get<{ comments: Comment[], total: number, page: number, limit: number }>(
+    `${this.apiUrl}/post/${postId}`,
+    {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
   }
-);
-}
   updateComment(commentId: string, content: string): Observable<Comment> {
   const token = localStorage.getItem('token');
 
