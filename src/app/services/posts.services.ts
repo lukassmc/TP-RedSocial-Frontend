@@ -60,6 +60,10 @@ export class PostsService {
         return this.http.delete<void>(`${this.apiUrl}/${postId}`)
     }
 
+    removePostAsAdmin(postId: string): Observable<any> {
+        return this.http.patch(`${this.apiUrl}/${postId}/disable`, {});
+    }
+
     
   
     likePost(postId: string): Observable<Post> {
@@ -80,10 +84,9 @@ export class PostsService {
     
     isPostOwner(post: Post): boolean {
     const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) return false;
     
-    return post.userId._id === currentUser._id;
-    }
+    return currentUser && post.userId && currentUser._id === post.userId._id;
+}
     
 }
 

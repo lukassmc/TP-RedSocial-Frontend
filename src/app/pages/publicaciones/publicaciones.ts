@@ -144,6 +144,9 @@ export class Publicaciones implements OnInit {
 
     
   }
+   onPostRemoved(postIdToRemove: string): void {
+    this.posts = this.posts.filter(post => post._id !== postIdToRemove);
+  }
 
   get pagesArray(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);

@@ -19,9 +19,11 @@ export class PostCardComponent implements OnInit {
   @Output() like = new EventEmitter<string>();
   @Output() unlike = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
+  @Output() takenDown = new EventEmitter<string>();
 
   hasLiked: boolean = false;
   isOwner: boolean = false;
+  isAdmin : boolean = false;
   showComments: boolean = false
 
   constructor(
@@ -34,11 +36,32 @@ export class PostCardComponent implements OnInit {
   console.log('🔍 Post completo:', this.post);
   
     this.checkUserInteractions();
+    this.checkIfAdmin();
   }
 
   private checkUserInteractions(): void {
     this.hasLiked = this.postsService.hasLiked(this.post);
     this.isOwner = this.postsService.isPostOwner(this.post);
+  }
+
+  private checkIfAdmin(): void {
+    const currentUser = this.authService.getCurrentUser();
+    this.isAdmin = currentUser?.role === 'administrador';
+  }
+  
+  onTakeDownClick(): void {
+    if (confirm(`¿Estás seguro de que quieres bajar la publicación "${this.post.title}"?`)) {
+      this.postsService.removePostAsAdmin(this.post._id).subscribe({
+        next: () => {
+          alert('Publicación bajada exitosamente.');
+          this.takenDown.emit(String(this.post._id)); 
+        },
+        error: (err) => {
+          console.error('Error al bajar la publicación:', err);
+          alert('No se pudo bajar la publicación.');
+        }
+      });
+    }
   }
   
   openPost() {

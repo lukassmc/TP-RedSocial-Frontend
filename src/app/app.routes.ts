@@ -1,6 +1,9 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
+import { DashboardUsers } from './pages/dashboard-users/dashboard-users';
+import { AdminGuard } from './guards/admin-guard';
+import { DashboardEstadisticasComponent } from './pages/dashboard-estadisticas/dashboard-estadisticas';
 
 export const routes: Routes = [
   { 
@@ -26,6 +29,15 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/mi-perfil/mi-perfil').then(m => m.MiPerfil),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'dashboard/usuarios',
+    loadComponent : () => import('./pages/dashboard-users/dashboard-users').then(m => m.DashboardUsers),
+    canActivate: [AdminGuard]
+  },
+  { 
+    path: 'dashboard/estadisticas',
+      loadComponent: () => import('./pages/dashboard-estadisticas/dashboard-estadisticas').then(m => m.DashboardEstadisticasComponent), 
+     canActivate: [AdminGuard] },
   {
     path:'posts/:id',
     loadComponent: () => import('./pages/post-detail/post-detail').then(m => m.PostDetail),

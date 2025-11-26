@@ -1,0 +1,121 @@
+<div class="dashboard-container">
+  <div class="dashboard-wrapper">
+    <div class="bg-decoration bg-top"></div>
+    <div class="bg-decoration bg-bottom"></div>
+
+    <header class="dashboard-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i class="bi bi-people-fill"></i>
+        </div>
+      </div>
+      <h1 class="brand-title">Panel de Administración</h1>
+      <p class="brand-subtitle">Gestiona los usuarios y sus permisos</p>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Sección de Creación de Usuario -->
+      <section class="card create-user-card">
+        <div class="card-decoration"></div>
+        <div class="card-body">
+          <h4 class="card-title">
+            <i class="bi bi-person-plus-fill"></i>
+            Crear Nuevo Usuario
+          </h4>
+
+          <form [formGroup]="createUserForm" (ngSubmit)="onCreateUser()" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombre" class="form-label"><i class="bi bi-person"></i> Nombre</label>
+                <input id="nombre" type="text" class="form-control" formControlName="nombre" placeholder="Nombre del usuario" />
+              </div>
+              <div class="form-group">
+                <label for="apellido" class="form-label"><i class="bi bi-person"></i> Apellido</label>
+                <input id="apellido" type="text" class="form-control" formControlName="apellido" placeholder="Apellido del usuario" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="username" class="form-label"><i class="bi bi-at"></i> Username</label>
+                <input id="username" type="text" class="form-control" formControlName="username" placeholder="nombredeusuario" />
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label"><i class="bi bi-envelope"></i> Correo</label>
+                <input id="email" type="email" class="form-control" formControlName="email" placeholder="tu@correo.com" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="password" class="form-label"><i class="bi bi-lock"></i> Contraseña</label>
+                <input id="password" type="password" class="form-control" formControlName="password" placeholder="Contraseña" />
+              </div>
+              <div class="form-group">
+                <label for="birthdate" class="form-label"><i class="bi bi-calendar"></i> Fecha de Nacimiento</label>
+                <input id="birthdate" type="date" class="form-control" formControlName="birthdate" />
+              </div>
+            </div>
+            
+            <div class="form-group role-selector">
+              <label class="form-label"><i class="bi bi-shield-check"></i> Rol del Usuario</label>
+              <div>
+                <label class="form-check">
+                  <input type="radio" value="usuario" formControlName="role" class="form-check-input" />
+                  <span class="form-check-label">Usuario</span>
+                </label>
+                <label class="form-check">
+                  <input type="radio" value="administrador" formControlName="role" class="form-check-input" />
+                  <span class="form-check-label">Administrador</span>
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="createUserForm.invalid">
+              <i class="bi bi-person-plus-fill"></i> Crear Usuario
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Sección de Lista de Usuarios -->
+      <section class="card users-list-card">
+        <div class="card-decoration"></div>
+        <div class="card-body">
+          <h4 class="card-title">
+            <i class="bi bi-list-ul"></i>
+            Listado de Usuarios
+          </h4>
+          <div class="table-container">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users">
+                  <td class="user-info">
+                    <img [src]="user.profilePicture || 'assets/default-user.png'" alt="Avatar" class="user-avatar">
+                    <span>{{ user.nombre }} {{ user.apellido }}</span>
+                  </td>
+                  <td>{{ user.email }}</td>
+                  <td><span class="badge-role" [class.badge-admin]="user.role === 'administrador'">{{ user.role }}</span></td>
+                  <td><span class="badge-status" [class.status-active]="user.isActive">{{ user.isActive ? 'Activo' : 'Inactivo' }}</span></td>
+                  <td>
+                    <button (click)="onToggleActive(user._id)" class="btn-action" [class.btn-disable]="user.isActive" [class.btn-enable]="!user.isActive">
+                      <i [class]="user.isActive ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
+                      {{ user.isActive ? 'Deshabilitar' : 'Habilitar' }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

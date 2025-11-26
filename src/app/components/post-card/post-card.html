@@ -75,6 +75,13 @@
         <i>💬</i>
         
       </button>
+      <button 
+        *ngIf="isAdmin" 
+        (click)="onTakeDownClick(); $event.stopPropagation()" 
+        class="action-btn admin-action"
+        title="Bajar Publicación (Solo Admins)">
+        <i class="bi bi-shield-x"></i> Bajar
+    </button>
     </div>
   </div>
     <div *ngIf="showComments" class="comments-wrapper">

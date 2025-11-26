@@ -54,7 +54,9 @@ export class NavbarComponent implements OnInit {
     this.showUserMenu = false;
   }
 
-  
+  get getCurrentUser() {
+    return this.authService.getCurrentUser();
+  }
   ngOnDestroy() {
     this.sub?.unsubscribe();
   }

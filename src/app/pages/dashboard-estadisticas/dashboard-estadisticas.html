@@ -1,0 +1,47 @@
+<div class="dashboard-container">
+  <div class="dashboard-wrapper">
+    <header class="dashboard-header">
+      <h1>Panel de Estadísticas</h1>
+      <p>Visualiza la actividad de la red social</p>
+    </header>
+
+    <section class="filters-section">
+      <label for="startDate">Desde:</label>
+      <input type="date" id="startDate" [(ngModel)]="dateRange.start" (change)="loadStats()">
+
+      <label for="endDate">Hasta:</label>
+      <input type="date" id="endDate" [(ngModel)]="dateRange.end" (change)="loadStats()">
+    </section>
+
+    <div *ngIf="isLoading" class="loading-indicator">
+      <p>Cargando estadísticas...</p>
+    </div>
+
+    <div *ngIf="!isLoading" class="charts-grid">
+      <!-- Gráfico de Barras: Posts por Usuario -->
+      <div class="chart-card">
+        <h3>Posts por Usuario</h3>
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+      </div>
+
+      <!-- Gráfico de Líneas: Comentarios en el Tiempo -->
+      <div class="chart-card">
+        <h3>Comentarios en el Tiempo</h3>
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+      </div>
+
+      <!-- Gráfico de Torta: Top 10 Posts Comentados -->
+      <div class="chart-card">
+        <h3>Top 10 Posts Comentados</h3>
+        <div *ngIf="hasPieChartData; else noData">
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+    </div>
+
+
+    <ng-template #noData>
+        <p class="no-data-message">No hay comentarios en el rango de fechas seleccionado.</p>
+    </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

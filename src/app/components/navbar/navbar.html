@@ -25,6 +25,18 @@
         >
           <i class="bi bi-person"></i><span>Mi Perfil</span>
         </a>
+        <a *ngIf="currentUser && currentUser.role === 'administrador'" 
+          routerLink="/dashboard/usuarios" 
+          routerLinkActive="active"
+          class="nav-link nav-link-admin"> 
+          <i class="bi bi-gear"></i> Panel de Admin
+        </a>
+        <a *ngIf="currentUser && currentUser.role === 'administrador'" 
+          routerLink="/dashboard/estadisticas" 
+          routerLinkActive="active"
+          class="nav-link nav-link-admin"> 
+          <i class="bi bi-graph-up"></i> Estadísticas
+        </a>
       </div>
     </ng-container>
 
