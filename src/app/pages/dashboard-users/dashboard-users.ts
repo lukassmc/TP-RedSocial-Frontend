@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UsersService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { dateNotInFuture, minAge } from '../../validators/date.validators';
 
 @Component({
   selector: 'app-dashboard-users',
@@ -29,7 +30,7 @@ export class DashboardUsers implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      birthdate: ['', Validators.required],
+      birthdate: ['', Validators.required, dateNotInFuture(), minAge(13) ],
       role: ['usuario', Validators.required] 
     });
   }
